@@ -33,7 +33,7 @@ public class Utils {
         if (missatge != null) {
             System.out.print(missatge);
         }
-        result = scan.nextLine();
+        result = scan.nextLine().toUpperCase();
 
         return result;
     }
