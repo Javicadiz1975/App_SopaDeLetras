@@ -13,7 +13,7 @@ public class MainSopa {
 
         while (palabrasEncontradas < 5) {
             mostrarSopaDeLetras(sopaDeLetras.getSopa(),sopaDeLetras.getDescubiertas());
-            String paraula = Utils.LeerString("Introduce la palabra a buscar:", 1, 10;
+            String paraula = Utils.LeerString("Introduce la palabra a buscar:", 1, 10);
             if (sopaDeLetras.buscarPalabra(paraula)) {
                 System.out.println("Palabra encontrada");
             } else {
