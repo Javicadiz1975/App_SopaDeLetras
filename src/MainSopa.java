@@ -16,10 +16,11 @@ public class MainSopa {
             String paraula = Utils.LeerString("Introduce la palabra a buscar:", 1, 10);
             if (sopaDeLetras.buscarPalabra(paraula)) {
                 System.out.println("Palabra encontrada");
+                palabrasEncontradas++;
             } else {
                 System.out.println("Paraula no encontrada");
             }
-            palabrasEncontradas++;
+
         }
         System.out.println("Has encontrado todas las palabras.");
     }
