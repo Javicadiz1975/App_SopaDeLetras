@@ -5,51 +5,102 @@ import static org.junit.Assert.*;
 
 public class MainSopaTest {
 
-
-    String cadena = "NASQYCCSOZMRWOIHZNFRZUIFEUWBYTPBFPCSFQQIPYTHONBGVIJPDDBTNEVWGGESOYPYTUFYUILECHAVVBZSHXTAJTDZXLYJAVAQ";
-    String buscarPalabra = "PYTHON";
-    String palabraNoExistente = "HOLA";
+    SopaDeLetras sopaDeLetras;
+    String cadena = "testotestotestotestotesto";
     @Before
     public void setUp() {
-        SopaDeLetras sopaDeLetras = new SopaDeLetras(10, 10);
-        SopaDeLetras.crearSopadeLetras(cadena);
+        sopaDeLetras = new SopaDeLetras(5, 5);
+        sopaDeLetras.crearSopadeLetras(cadena);
     }
     @Test
-    public void testCrearSopadeLetras() {
-        char[][] sopa = SopaDeLetras.crearSopadeLetras(cadena);
+    public void testCrearSopaDeLetras() {
+        // sopa de izquierda a derecha y de arriba a abajo,
+        char[][] esperado = {
+                {'t', 'e', 's', 't', 'o'},
+                {'t', 'e', 's', 't', 'o'},
+                {'t', 'e', 's', 't', 'o'},
+                {'t', 'e', 's', 't', 'o'},
+                {'t', 'e', 's', 't', 'o'},
+        };
 
-        // Verifica que la longitud de la primera fila sea igual al número de columnas esperado.
-        assertEquals("La primera fila de la sopa de letras debe tener la longitud esperada.", 10, sopa[0].length);
+        // Llamamos al método para crear la sopa de letras con nuestra cadena de prueba
+        sopaDeLetras.crearSopadeLetras(cadena);
 
-        // Además, verifica que ninguna fila tenga una longitud inesperadamente incorrecta, por ejemplo, 0.
-        for (char[] fila : sopa) {
-            assertNotEquals("Ninguna fila de la sopa de letras debe tener una longitud de 0.", 0, fila.length);
+        // Verificar que cada posición de la sopa de letras contiene el caracter esperado
+        for (int i = 0; i < esperado.length; i++) {
+            assertArrayEquals("La fila " + (i + 1) + " no coincide con lo esperado.", esperado[i], sopaDeLetras.getSopa()[i]);
         }
     }
 
+
     @Test
-    public void testComprobarPalabra() {
-        // Palabra que sabemos está presente en la sopa de letras.
+    public void testComprobarPalabraHorizontalmente() {
 
-        // Verifica que la palabra existente sea encontrada.
-        assertTrue("La palabra '" + buscarPalabra + "' debería existir en la Sopa de Letras", SopaDeLetras.buscarPalabra(buscarPalabra));
+        //palabra "test" se espera encontrarla empezando en la posición (0, 0) y extendiéndose horizontalmente hasta la posición (0, 3).
+        int[][] resultadoEsperado = new int[][]{{0, 0}, {0, 1}, {0, 2}, {0, 3}};
 
-        // Verifica que la palabra no existente no sea encontrada.
-        assertFalse("La palabra '" + palabraNoExistente + "' no debería existir en la Sopa de Letras", SopaDeLetras.buscarPalabra(palabraNoExistente));
+        // Llama al método 'comprobarPalabra' con los parámetros necesarios para buscar
+        int[][] coords = sopaDeLetras.comprobarPalabra("test", 0, 0, false);
+
+        // Verifica que el resultado de 'comprobarPalabra' no sea null, lo que indicaría
+        assertNotNull("Debería haber encontrado la palabra 'test' horizontalmente.", coords);
+
+        // Comprueba que las coordenadas devueltas por 'comprobarPalabra' coincidan exactamente con el resultado esperado
+        assertArrayEquals("Las coordenadas de la palabra 'test' no son las esperadas.", resultadoEsperado, coords);
+    }
+
+    @Test
+    public void testComprobarPalabraVerticalmente() {
+
+        //palabra "tttt" cuando se espera encontrarla empezando en la posición (0, 0)  y extendiéndose verticalmente hasta la posición (3, 0).
+        int[][] resultadoEsperado = new int[][]{{0, 0}, {1, 0}, {2, 0}, {3, 0}};
+
+        // Llama al método 'comprobarPalabra' con los parámetros necesarios para buscar
+        int[][] coords = sopaDeLetras.comprobarPalabra("tttt", 0, 0, true);
+
+        // Verifica que el resultado de 'comprobarPalabra' no sea null
+        assertNotNull("Debería haber encontrado la palabra 'test' verticalmente.", coords);
+
+        // Comprueba que las coordenadas devueltas por 'comprobarPalabra' coincidan exactamente con el resultado esperado. .
+        assertArrayEquals("Las coordenadas de la palabra 'test' no son las esperadas.", resultadoEsperado, coords);
+    }
+
+    @Test
+    public void testPalabraNoEncontrada() {
+
+        // Llama al método comprobarPalabra
+        int[][] coords = sopaDeLetras.comprobarPalabra("xyz", 0, 0, true);
+
+        // Verifica que el resultado de 'comprobarPalabra' sea null, lo cual indicaría que la palabra "xyz" no fue encontrada en la sopa de letras.
+        assertNull("No debería haber encontrado la palabra 'xyz'.", coords);
     }
 
     @Test
     public void testMarcarLetrasDescubiertas() {
-        // Verifica que la palabra exista en la sopa de letras para este test.
-        boolean encontrada = SopaDeLetras.buscarPalabra(buscarPalabra);
-        assertTrue("palabra no marcada por no encontrarse",encontrada);
+        //Definir un conjunto de coordenadas para marcar como descubiertas
+        int[][] coordenadas = new int[][]{{0, 0}, {1, 1}, {2, 2}, {3, 3}};
+
+        //Ejecutar el método marcarLetrasDescubiertas con el conjunto de coordenadas definido
+        SopaDeLetras.marcarLetrasDescubiertas(coordenadas);
+
+        //Verificar que cada una de estas coordenadas ahora está marcada como descubierta en la matriz descubiertas
+        for (int[] coord : coordenadas) {
+            assertTrue("La coordenada en (" + coord[0] + ", " + coord[1] + ") debería estar marcada como descubierta.", sopaDeLetras.getDescubiertas()[coord[0]][coord[1]]);
+        }
     }
 
     @Test
     public void testBuscarPalabraPresente() {
-        boolean resultado = SopaDeLetras.buscarPalabra(buscarPalabra);
-        assertTrue("palabra no existente en SopadeLetra",resultado);
+        //Asumiendo que 'test' está en la primera fila o columna
+        assertTrue("La palabra 'test' debería estar presente en la sopa.", sopaDeLetras.buscarPalabra("test"));
     }
+
+    @Test
+    public void testBuscarPalabraNoPresente() {
+        //Asumiendo que 'java' no está en la sopa de letras
+        assertFalse("La palabra 'java' no debería estar presente en la sopa.",sopaDeLetras.buscarPalabra("m05"));
+    }
+
 
 
 }
