@@ -97,7 +97,7 @@ public class MainSopaTest {
 
     @Test
     public void testBuscarPalabraNoPresente() {
-        //Asumiendo que 'java' no está en la sopa de letras
+        //Asumiendo que 'm05' no está en la sopa de letras
         assertFalse("La palabra 'java' no debería estar presente en la sopa.",sopaDeLetras.buscarPalabra("m05"));
     }
 
